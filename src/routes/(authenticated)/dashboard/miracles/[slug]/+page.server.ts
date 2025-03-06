@@ -9,6 +9,7 @@ import { genericApiCall } from '$lib/utils/apiUtils';
 import { supabase } from '$lib/server/supabaseClient';
 import { error } from '@sveltejs/kit';
 import { editMiracleSchema } from '$lib/utils/authSchema/edit-miracle-schema';
+import { ZodError } from 'zod';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const [miracleData, miracleError]: [MiracleTableType[], ServerErrorType | null] =
@@ -49,10 +50,32 @@ export const load: PageServerLoad = async ({ params }) => {
 
 export const actions: Actions = {
 	update: async ({ request, locals: { supabase } }) => {
-		const formData = Object.fromEntries(await request.formData());
+		const formData: any = Object.fromEntries(await request.formData());
+
+		if (formData?.quotes) {
+			let tempQuotes = formData.quotes.split(',');
+			formData.quotes = tempQuotes.map((elem: string) => elem.trim());
+		}
+
+		if (formData?.deleted) {
+			formData.deleted = formData.deleted === 'true';
+		}
+
+		if (formData?.draft) {
+			formData.draft = formData.draft === 'true';
+		}
 
 		try {
 			const result = editMiracleSchema.parse(formData);
-		} catch (e: any) {}
+		} catch (e: any) {
+			if (e instanceof ZodError) {
+				const { fieldErrors: errors } = e.flatten();
+
+				return {
+					data: formData,
+					errors
+				};
+			}
+		}
 	}
 };

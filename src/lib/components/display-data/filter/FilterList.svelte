@@ -28,7 +28,6 @@
 	const handleLocationFilterChange = (event: Event, filterIdList: string[], filterKey: string) => {
 		const target = event.target as HTMLInputElement;
 
-		console.log('here');
 		if (target.checked && !filterIdList.includes(target.value)) {
 			filterIdList.push(target.value);
 		} else {
