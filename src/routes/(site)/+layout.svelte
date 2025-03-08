@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../../app.scss';
+	import '../../app.css';
 	import Navbar from '$lib/components/globals/navigation/site/navbar.svelte';
 	import Footer from '$lib/components/globals/footer/footer.svelte';
 	import type { Snippet } from 'svelte';

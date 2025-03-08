@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-import type { Actions } from '../../../../.svelte-kit/types/src/routes';
+import type { Actions } from './$types';
 
 export const actions: Actions = {
 	signup: async ({ request, locals: { supabase } }) => {

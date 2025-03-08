@@ -2,6 +2,7 @@
 
 	import { truncate } from '$lib/utils/helpers/helper.utils';
 	import Icon from '@iconify/svelte';
+	import { hasPermission } from '$lib/utils/role-permissions';
 
 	let { data } = $props();
 
@@ -35,11 +36,20 @@
 					{#if miracle.blurb}
 						<p>{truncate(miracle.blurb, 250)}</p>
 					{/if}
-					<div class="card-actions justify-end">
-						<a href={`/dashboard/miracles/${miracle.slug}`} class="btn btn-primary flex items-center">
-							<Icon icon="mdi:edit-box-outline" width="24" height="24" />
-							Edit</a>
-					</div>
+					{#if hasPermission(data.userData, 'miracles', 'update', miracle)}
+						<div class="card-actions justify-end">
+							<a href={`/dashboard/miracles/${miracle.id}`} class="btn btn-info flex items-center">
+								<Icon icon="mdi:edit-box-outline" width="24" height="24" />
+								Edit</a>
+						</div>
+					{:else}
+						<div class="card-actions justify-end">
+							<a href={`/dashboard/miracles/${miracle.id}`} class="btn btn-secondary flex items-center">
+								<Icon icon="carbon:data-view-alt" width="24" height="24" />
+								View
+							</a>
+						</div>
+					{/if}
 				</div>
 			</div>
 		{/each}

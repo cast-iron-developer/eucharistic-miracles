@@ -2,7 +2,7 @@
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 
-	import '../../../app.scss';
+	import '../../../app.css';
 	import Navbar from '$lib/components/globals/navigation/site/navbar.svelte';
 
 	let { data, children } = $props();

@@ -3,10 +3,60 @@ import containerQueries from '@tailwindcss/container-queries';
 import typography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
 
+const colors = {
+	primary: {
+		default: '#0a0f0d',
+		focus: '#080c0b',
+		content: '#ffffff'
+	},
+	secondary: {
+		default: '#399e5a',
+		focus: '#173f24',
+		content: '#ffffff'
+	},
+	accent: {
+		default: '#c5283d',
+		focus: '#4e1018',
+		content: '#ffffff'
+	},
+	action: {
+		info: '#2094f3',
+		success: '#28a745',
+		warning: '#ffc107',
+		error: '#dc3545'
+	}
+};
 /** @type {import('tailwindcss').Config} */
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
-
+	daisyui: {
+		themes: [
+			{
+				mytheme: {
+					primary: colors.primary.default,
+					'primary-focus': colors.primary.focus,
+					'primary-content': colors.primary.content,
+					secondary: colors.secondary.default,
+					'secondary-focus': colors.secondary.focus,
+					'secondary-content': colors.secondary.content,
+					accent: colors.accent.default,
+					'accent-focus': colors.accent.focus,
+					'accent-content': colors.accent.content,
+					neutral: '#3d4451',
+					'neutral-focus': '#2a2e37',
+					'neutral-content': '#ffffff',
+					'base-100': '#ffffff',
+					'base-200': '#f9fafb',
+					'base-300': '#d1d5db',
+					'base-content': '#1f2937',
+					info: colors.action.info,
+					success: colors.action.success,
+					warning: colors.action.warning,
+					error: colors.action.error
+				}
+			}
+		]
+	},
 	plugins: [require('daisyui'), typography, containerQueries, aspectRatio],
 	theme: {
 		container: {
@@ -87,11 +137,11 @@ export default {
 			},
 			colors: {
 				primary: {
-					DEFAULT: '#0a0f0d',
+					DEFAULT: colors.primary.default,
 					100: '#020303',
 					200: '#040605',
 					300: '#060908',
-					400: '#080c0b',
+					400: colors.primary.focus,
 					500: '#0a0f0d',
 					600: '#314940',
 					700: '#588472',
@@ -99,9 +149,9 @@ export default {
 					900: '#c5d8d0'
 				},
 				secondary: {
-					DEFAULT: '#c5283d',
+					DEFAULT: colors.accent.default,
 					100: '#27080c',
-					200: '#4e1018',
+					200: colors.accent.focus,
 					300: '#751824',
 					400: '#9c2030',
 					500: '#c5283d',
@@ -111,9 +161,9 @@ export default {
 					900: '#f6d1d6'
 				},
 				tert: {
-					DEFAULT: '#399e5a',
+					DEFAULT: colors.secondary.default,
 					100: '#0b1f12',
-					200: '#173f24',
+					200: colors.secondary.focus,
 					300: '#225e36',
 					400: '#2d7e48',
 					500: '#399e5a',

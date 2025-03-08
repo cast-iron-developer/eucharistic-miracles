@@ -2,7 +2,7 @@
 	import { goto, invalidate, onNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
 
-	import '../../../app.scss';
+	import '../../../app.css';
 	import Navbar from '$lib/components/globals/navigation/site/navbar.svelte';
 	import DashboardNavbar from '$lib/components/globals/navigation/dashboard/dashboard-navbar.svelte';
 
@@ -51,8 +51,11 @@
 
 </script>
 
-<Navbar isAdmin={true} isAuthenticated={authenticated} urlParams={'dashboard'}
-				logout={logout}></Navbar>
+<Navbar
+	isAdmin={true}
+	isAuthenticated={authenticated}
+	urlParams={'dashboard'}
+	logout={logout}></Navbar>
 <main class="admin font-montserrat bg-backgroundWhite h-[calc(100vh-76px)]">
 	<section class="grid grid-rows-1 h-full {expandDrawer ? 'grid-cols-[200px,1fr]' : 'grid-cols-[75px,1fr]'}">
 		<aside class="bg-primary-700 col-span-1">

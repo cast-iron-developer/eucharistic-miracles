@@ -5,7 +5,7 @@ import {
 	COUNTRY_DATA_SELECT_QUERY,
 	genericApiCall,
 	LIST_DATA_SELECT_QUERY
-} from '$lib/utils/apiUtils';
+} from '$lib/utils/api-utils';
 import { error } from '@sveltejs/kit';
 
 export const load: ({ params }: { params: any }) => Promise<{

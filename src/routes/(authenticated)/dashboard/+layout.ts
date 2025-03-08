@@ -1,6 +1,9 @@
 import { createBrowserClient, createServerClient, isBrowser } from '@supabase/ssr';
 import { env } from '$env/dynamic/public';
 import type { LayoutLoad } from './$types';
+import { genericApiCall } from '$lib/utils/api-utils';
+import type { UserDataTableType } from '$lib/utils/types/general-types';
+import { error } from '@sveltejs/kit';
 
 export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 	/**
@@ -39,5 +42,15 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 		data: { user }
 	} = await supabase.auth.getUser();
 
-	return { session, supabase, user };
+	const [userData, userError] = await genericApiCall<UserDataTableType>(
+		supabase.from('user_data').select('*').eq('supabase_id', user?.id).limit(1)
+	);
+
+	if (userError) {
+		error(userError.status, {
+			message: userError.statusText
+		});
+	}
+
+	return { session, supabase, user, userData: userData?.[0] };
 };

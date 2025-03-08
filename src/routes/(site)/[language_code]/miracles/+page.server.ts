@@ -3,7 +3,7 @@ import {
 	COUNTRY_DATA_SELECT_QUERY,
 	genericApiCall,
 	LIST_DATA_SELECT_QUERY
-} from '$lib/utils/apiUtils';
+} from '$lib/utils/api-utils';
 import type { FilterData, ListData, ServerErrorType } from '$lib/utils/types/general-types';
 import { error } from '@sveltejs/kit';
 

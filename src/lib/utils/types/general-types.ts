@@ -1,26 +1,26 @@
-import type { Tables } from '$lib/server/database.types';
+import type { Enums, Tables } from '$lib/server/database.types';
 
 export type MiracleTableType = Tables<'miracles'>;
 export type OurLadyTableType = Tables<'our_lady'>;
 export type SaintTableType = Tables<'saints'>;
 export type LanguageTableType = Tables<'languages'>;
 export type CountryTableType = Tables<'countries'>;
-
-export type MiracleWithCountry = MiracleTableType & {
-	countries?: CountryType;
-};
+export type UserDataTableType = Tables<'user_data'>;
+export type RoleEnum = Enums<'role'>;
 
 export type FullMiracleData = MiracleTableType & {
 	countries?: CountryType;
 	languages?: LanguageType;
 };
 
-export type OurLadyWithCountry = OurLadyTableType & {
+export type FullOurLadyData = OurLadyTableType & {
 	countries?: CountryType;
+	languages?: LanguageType;
 };
 
-export type SaintWithCountry = SaintTableType & {
+export type FullSaintWithData = SaintTableType & {
 	countries?: CountryType;
+	languages?: LanguageType;
 };
 
 export type ListData = {

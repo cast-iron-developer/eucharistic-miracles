@@ -1,5 +1,5 @@
 import { supabase } from '$lib/server/supabaseClient';
-import { genericApiCall, LANGUAGE_DATA_SELECT_QUERY } from '$lib/utils/apiUtils';
+import { genericApiCall, LANGUAGE_DATA_SELECT_QUERY } from '$lib/utils/api-utils';
 import type { LanguageCodes, LanguageData, ServerErrorType } from '$lib/utils/types/general-types';
 import { error } from '@sveltejs/kit';
 

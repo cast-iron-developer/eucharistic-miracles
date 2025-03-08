@@ -1,4 +1,4 @@
-import { genericApiCall } from '$lib/utils/apiUtils';
+import { genericApiCall } from '$lib/utils/api-utils';
 import type { FullMiracleData, ServerErrorType } from '$lib/utils/types/general-types';
 import { supabase } from '$lib/server/supabaseClient';
 import { error } from '@sveltejs/kit';

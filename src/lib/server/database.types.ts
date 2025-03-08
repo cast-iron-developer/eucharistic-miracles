@@ -104,51 +104,60 @@ export type Database = {
       }
       miracles: {
         Row: {
-          base_translation: boolean | null
+          approved_by: string | null
+          base_translation: boolean
           blurb: string | null
           country_id: string
           created_at: string
-          deleted: boolean | null
-          draft: boolean | null
+          created_by: string | null
+          deleted: boolean
+          draft: boolean
           id: string
           language_code: string
           modified_at: string | null
           name: string
           occurrence_year: number | null
+          published: boolean | null
           quotes: string[] | null
           slug: string | null
           story: string
           type: Database["public"]["Enums"]["type"]
         }
         Insert: {
-          base_translation?: boolean | null
+          approved_by?: string | null
+          base_translation?: boolean
           blurb?: string | null
           country_id?: string
           created_at?: string
-          deleted?: boolean | null
-          draft?: boolean | null
+          created_by?: string | null
+          deleted?: boolean
+          draft?: boolean
           id?: string
           language_code: string
           modified_at?: string | null
           name: string
           occurrence_year?: number | null
+          published?: boolean | null
           quotes?: string[] | null
           slug?: string | null
           story: string
           type?: Database["public"]["Enums"]["type"]
         }
         Update: {
-          base_translation?: boolean | null
+          approved_by?: string | null
+          base_translation?: boolean
           blurb?: string | null
           country_id?: string
           created_at?: string
-          deleted?: boolean | null
-          draft?: boolean | null
+          created_by?: string | null
+          deleted?: boolean
+          draft?: boolean
           id?: string
           language_code?: string
           modified_at?: string | null
           name?: string
           occurrence_year?: number | null
+          published?: boolean | null
           quotes?: string[] | null
           slug?: string | null
           story?: string
@@ -171,33 +180,14 @@ export type Database = {
           },
         ]
       }
-      notes: {
-        Row: {
-          created_at: string
-          id: number
-          note: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: never
-          note: string
-          user_id?: string
-        }
-        Update: {
-          created_at?: string
-          id?: never
-          note?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       our_lady: {
         Row: {
+          approved_by: string | null
           base_translation: boolean | null
           blurb: string | null
           country_id: string
           created_at: string
+          created_by: string | null
           deleted: boolean | null
           draft: boolean | null
           feast_day: string | null
@@ -206,16 +196,19 @@ export type Database = {
           modified_at: string | null
           name: string
           occurrence_year: number | null
+          published: boolean | null
           quotes: string[] | null
           slug: string | null
           story: string | null
           type: Database["public"]["Enums"]["type"]
         }
         Insert: {
+          approved_by?: string | null
           base_translation?: boolean | null
           blurb?: string | null
           country_id?: string
           created_at?: string
+          created_by?: string | null
           deleted?: boolean | null
           draft?: boolean | null
           feast_day?: string | null
@@ -224,16 +217,19 @@ export type Database = {
           modified_at?: string | null
           name: string
           occurrence_year?: number | null
+          published?: boolean | null
           quotes?: string[] | null
           slug?: string | null
           story?: string | null
           type?: Database["public"]["Enums"]["type"]
         }
         Update: {
+          approved_by?: string | null
           base_translation?: boolean | null
           blurb?: string | null
           country_id?: string
           created_at?: string
+          created_by?: string | null
           deleted?: boolean | null
           draft?: boolean | null
           feast_day?: string | null
@@ -242,6 +238,7 @@ export type Database = {
           modified_at?: string | null
           name?: string
           occurrence_year?: number | null
+          published?: boolean | null
           quotes?: string[] | null
           slug?: string | null
           story?: string | null
@@ -307,12 +304,14 @@ export type Database = {
       }
       saints: {
         Row: {
+          approved_by: string | null
           base_translation: boolean | null
           beatified: boolean | null
           blurb: string | null
           canonized: boolean | null
           country_id: string
           created_at: string
+          created_by: string | null
           deleted: boolean | null
           draft: boolean | null
           feast_day: string | null
@@ -321,18 +320,21 @@ export type Database = {
           miraculous_communion: boolean | null
           modified_at: string | null
           name: string
+          published: boolean | null
           quotes: string[] | null
           slug: string | null
           story: string | null
           type: Database["public"]["Enums"]["type"]
         }
         Insert: {
+          approved_by?: string | null
           base_translation?: boolean | null
           beatified?: boolean | null
           blurb?: string | null
           canonized?: boolean | null
           country_id?: string
           created_at?: string
+          created_by?: string | null
           deleted?: boolean | null
           draft?: boolean | null
           feast_day?: string | null
@@ -341,18 +343,21 @@ export type Database = {
           miraculous_communion?: boolean | null
           modified_at?: string | null
           name: string
+          published?: boolean | null
           quotes?: string[] | null
           slug?: string | null
           story?: string | null
           type?: Database["public"]["Enums"]["type"]
         }
         Update: {
+          approved_by?: string | null
           base_translation?: boolean | null
           beatified?: boolean | null
           blurb?: string | null
           canonized?: boolean | null
           country_id?: string
           created_at?: string
+          created_by?: string | null
           deleted?: boolean | null
           draft?: boolean | null
           feast_day?: string | null
@@ -361,6 +366,7 @@ export type Database = {
           miraculous_communion?: boolean | null
           modified_at?: string | null
           name?: string
+          published?: boolean | null
           quotes?: string[] | null
           slug?: string | null
           story?: string | null
@@ -424,6 +430,27 @@ export type Database = {
           },
         ]
       }
+      user_data: {
+        Row: {
+          email: string | null
+          id: string
+          role: Database["public"]["Enums"]["role"]
+          supabase_id: string | null
+        }
+        Insert: {
+          email?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["role"]
+          supabase_id?: string | null
+        }
+        Update: {
+          email?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["role"]
+          supabase_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -461,13 +488,14 @@ export type Database = {
       }
     }
     Enums: {
+      role: "admin" | "editor" | "user"
       type:
-        | "Saints"
-        | "Miracles"
+        | "Saint"
+        | "Miracle"
         | "Our Lady"
         | "Country"
         | "Language"
-        | "Communions"
+        | "Communion"
     }
     CompositeTypes: {
       [_ in never]: never

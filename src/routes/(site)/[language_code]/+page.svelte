@@ -34,7 +34,7 @@
 					<h2 class="card-title">Eucharistic Miracles</h2>
 					<p>Click to learn more about Eucharistic Miracles from around the world.</p>
 					<div class="card-actions">
-						<a class="btn btn-primary" href={`/${data.code}/miracles`}>Explore now!</a>
+						<a class="btn btn-primary" href={`/${data.code}/miracles`}>Explore now</a>
 					</div>
 				</div>
 			</article>
@@ -49,7 +49,7 @@
 					<h2 class="card-title">Miraculous Communions</h2>
 					<p>Click to learn more about how the saints have miraculously receive Our Lord.</p>
 					<div class="card-actions">
-						<a class="btn btn-primary" href={`/${data.code}/communions`}>Explore now!</a>
+						<a class="btn btn-primary" href={`/${data.code}/communions`}>Explore now</a>
 					</div>
 				</div>
 			</article>
@@ -63,7 +63,7 @@
 					<h2 class="card-title">Holy Saints</h2>
 					<p>Click to learn more about some of our favorite saints.</p>
 					<div class="card-actions">
-						<a class="btn btn-primary" href={`/${data.code}/saints`}>Explore now!</a>
+						<a class="btn btn-primary" href={`/${data.code}/saints`}>Explore now</a>
 					</div>
 				</div>
 			</article>
@@ -77,7 +77,7 @@
 					<h2 class="card-title">Learn more about the Mother of God</h2>
 					<p>Click to learn more about Our Lord's mother.</p>
 					<div class="card-actions">
-						<a class="btn btn-primary" href={`/${data.code}/our-lady`}>Explore now!</a>
+						<a class="btn btn-primary" href={`/${data.code}/our-lady`}>Explore now</a>
 					</div>
 				</div>
 			</article>
