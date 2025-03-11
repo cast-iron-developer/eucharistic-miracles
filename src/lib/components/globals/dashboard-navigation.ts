@@ -37,6 +37,15 @@ export const dashboardNavigation: NavigationListType = {
 				width: '24'
 			},
 			href: '/dashboard/our-lady'
+		},
+		{
+			title: 'User Management',
+			icon: {
+				icon: 'pajamas:user',
+				height: '24',
+				width: '24'
+			},
+			href: '/dashboard/user-management'
 		}
 	]
 };

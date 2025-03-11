@@ -8,9 +8,9 @@ In honor of Bl. Carlo Acutis and his pursuit of the conversion of hearts and sal
 - TailwindCSS
 - DaisyUI
 - Supabase
-- [Mookaroo](https://mockaroo.com)
 - Coolors
 - [Squoosh](https://squoosh.app/)
+- [Iconify](https://iconify.design/docs/iconify-icon/)
 
 ## Developing
 

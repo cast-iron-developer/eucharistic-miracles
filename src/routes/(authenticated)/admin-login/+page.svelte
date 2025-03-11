@@ -62,9 +62,10 @@
 						</label>
 					{/if}
 				</div>
-				<button class="btn btn-outline btn-success w-full sm:btn-sm md:btn-md ">Login</button>
+				<button class="btn btn-outline btn-success w-full sm:btn-sm md:btn-md hover:!text-white">Login</button>
 				<div class="divider before:bg-primary after:bg-primary"></div>
-				<button class="btn btn-outline btn-info w-full sm:btn-sm md:btn-md" formaction="?/signup">Sign Up
+				<button class="btn btn-outline btn-info w-full sm:btn-sm md:btn-md hover:!text-white" formaction="?/signup">Sign
+					Up
 				</button>
 			</form>
 		</div>

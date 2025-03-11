@@ -3,7 +3,7 @@ import containerQueries from '@tailwindcss/container-queries';
 import typography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
 
-const colors = {
+export const colors = {
 	primary: {
 		default: '#0a0f0d',
 		focus: '#080c0b',

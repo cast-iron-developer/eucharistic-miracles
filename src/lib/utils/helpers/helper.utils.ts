@@ -16,12 +16,17 @@ export const truncate = (str: string, maxLength: number) => {
 	return reversed.reverse().join(' ') + '...';
 };
 
-export const recordTypeEnum = [
-	'Saints',
-	'Miracles',
-	'Our Lady',
-	'Country',
-	'Language',
-	'Communions'
-] as const;
-
+export const convertBooleanValue = (fieldType: string, value: boolean): string => {
+	let str: string = '';
+	switch (fieldType) {
+		case 'published':
+			str = value ? 'Published' : 'Not Published';
+			break;
+		case 'deleted':
+			str = value ? 'Deleted' : 'Not Deleted';
+			break;
+		default:
+			str = 'Information not available';
+	}
+	return str;
+};

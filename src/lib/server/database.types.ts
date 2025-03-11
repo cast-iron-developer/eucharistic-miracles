@@ -117,7 +117,7 @@ export type Database = {
           modified_at: string | null
           name: string
           occurrence_year: number | null
-          published: boolean | null
+          published: boolean
           quotes: string[] | null
           slug: string | null
           story: string
@@ -137,7 +137,7 @@ export type Database = {
           modified_at?: string | null
           name: string
           occurrence_year?: number | null
-          published?: boolean | null
+          published?: boolean
           quotes?: string[] | null
           slug?: string | null
           story: string
@@ -157,7 +157,7 @@ export type Database = {
           modified_at?: string | null
           name?: string
           occurrence_year?: number | null
-          published?: boolean | null
+          published?: boolean
           quotes?: string[] | null
           slug?: string | null
           story?: string
@@ -165,10 +165,24 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "miracles_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "user_data"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "miracles_country_id_fkey"
             columns: ["country_id"]
             isOneToOne: false
             referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "miracles_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_data"
             referencedColumns: ["id"]
           },
           {

@@ -1,28 +1,32 @@
 import type { Actions, PageServerLoad } from './$types';
 import type {
 	CountryTableType,
+	FullMiracleData,
 	LanguageTableType,
-	MiracleTableType,
 	ServerErrorType,
 	UserDataTableType
 } from '$lib/utils/types/general-types';
 import { genericApiCall } from '$lib/utils/api-utils';
 import { supabase } from '$lib/server/supabaseClient';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { editMiracleSchema } from '$lib/utils/authSchema/edit-miracle-schema';
 import { ZodError } from 'zod';
 import { AuthApiError, type User } from '@supabase/supabase-js';
 import { useDebug } from '$lib/utils/helpers/client-environment-helpers';
-import { hasPermission } from '$lib/utils/role-permissions';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const [miracleData, miracleError]: [MiracleTableType[], ServerErrorType | null] =
-		await genericApiCall<MiracleTableType>(
-			supabase.from('miracles').select('*').eq('id', params.id).limit(1)
+	const [miracleData, miracleError]: [FullMiracleData[], ServerErrorType | null] =
+		await genericApiCall<FullMiracleData>(
+			supabase
+				.from('miracles')
+				.select(
+					'*, creator_data:user_data!miracles_created_by_fkey(id, email), approver_data:user_data!miracles_approved_by_fkey(id, email)'
+				)
+				.eq('id', params.id)
 		);
 
 	if (miracleError) {
-		error(miracleError.status, {
+		error(miracleError.status || 500, {
 			message: miracleError.statusText
 		});
 	}
@@ -74,7 +78,6 @@ export const actions: Actions = {
 				throw new Error(`Unable to Retrieve User Data for: ${(user as User).email}`);
 			}
 		} catch (e: any) {
-			console.log('hrklejl;jlej;');
 			return {
 				data: formData,
 				errors: {
@@ -92,22 +95,16 @@ export const actions: Actions = {
 			formData.occurrence_year = isNaN(Math.abs(formData.occurrence_year))
 				? ''
 				: Math.abs(formData.occurrence_year);
+
 			// set boolean values
-			if (hasPermission(userData[0], 'miracles', 'delete')) {
-				formData.deleted = formData.published === 'true';
-			} else {
-				formData.deleted = false;
-			}
-			formData.deleted = formData.deleted === 'true';
 			formData.draft = formData.draft === 'true';
+			formData.deleted = formData.deleted === 'true';
 			formData.base_translation = formData.base_translation === 'true';
-			if (hasPermission(userData[0], 'miracles', 'approve')) {
-				formData.published = formData.published === 'true';
-			} else {
-				formData.published = false;
-			}
+			formData.published = formData.published === 'true';
 
 			const result = editMiracleSchema.parse(formData);
+
+			console.log('Result: ', result);
 
 			const { data, error } = await supabase
 				.from('miracles')
@@ -115,8 +112,8 @@ export const actions: Actions = {
 				.eq('id', params.id)
 				.select();
 
-			console.log('data: ', data);
-
+			console.log('Data: ', data);
+			console.log('Error: ', error);
 			if (error) {
 				if (useDebug()) {
 					console.log(`Unable to update record: ${result.name}`);
@@ -126,9 +123,7 @@ export const actions: Actions = {
 				throw new AuthApiError(error.message, error.status, error.code);
 			}
 		} catch (e: any) {
-			console.log('catch?');
 			if (e instanceof ZodError) {
-				console.log('here??????');
 				const { fieldErrors: errors } = e.flatten();
 
 				return {
@@ -151,5 +146,7 @@ export const actions: Actions = {
 				};
 			}
 		}
+
+		redirect(303, `/dashboard/miracles/${params.id}`);
 	}
 };

@@ -5,20 +5,21 @@
 	import { hasPermission } from '$lib/utils/role-permissions';
 
 	let { data } = $props();
+	$inspect(data);
 
 </script>
 
-<section class="bg-white to-md:px-4">
-	<article class="container py-16">
+<section class="bg-white to-md:px-4 py-12">
+	<article class="container p-5">
 		<div class="max-w-3xl mx-auto">
 			<h1 class="text-3xl">
 				Miracles
 			</h1>
 			<p>To Edit and existing Eucharistic Miracle, click the accompanying button to open it up.</p>
-			<div class="divider"></div>
 		</div>
 	</article>
-	<div class="flex flex-row flex-wrap justify-center gap-5">
+	<div class="divider"></div>
+	<div class="container flex flex-row flex-wrap justify-center gap-5 p-5">
 		{#each data.miracleData as miracle}
 			<div class="card bg-base-100 w-96 shadow-xl">
 				<div class="card-body">
@@ -38,7 +39,7 @@
 					{/if}
 					{#if hasPermission(data.userData, 'miracles', 'update', miracle)}
 						<div class="card-actions justify-end">
-							<a href={`/dashboard/miracles/${miracle.id}`} class="btn btn-info flex items-center">
+							<a href={`/dashboard/miracles/${miracle.id}`} class="btn btn-info flex items-center text-white">
 								<Icon icon="mdi:edit-box-outline" width="24" height="24" />
 								Edit</a>
 						</div>

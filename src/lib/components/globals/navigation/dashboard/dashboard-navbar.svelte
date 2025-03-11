@@ -2,8 +2,8 @@
 	import Icon from '@iconify/svelte';
 
 	let { expandDrawer = $bindable(), navigation: navigation } = $props();
-	// let expandDrawer: boolean = $state(false);
 </script>
+
 <div class="flex flex-row justify-center align-baseline p-2">
 	<button
 		class="block hover:bg-primary-600 bg-primary-700 border rounded hover:border-primary-700 border-primary-600 p-2 hover:text-white"

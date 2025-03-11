@@ -11,16 +11,27 @@ export type RoleEnum = Enums<'role'>;
 export type FullMiracleData = MiracleTableType & {
 	countries?: CountryType;
 	languages?: LanguageType;
+	creator_data?: ActionPerformedBy;
+	approver_data?: ActionPerformedBy;
 };
 
 export type FullOurLadyData = OurLadyTableType & {
 	countries?: CountryType;
 	languages?: LanguageType;
+	creator_data?: UserDataTableType;
+	approver_data?: UserDataTableType;
 };
 
 export type FullSaintWithData = SaintTableType & {
 	countries?: CountryType;
 	languages?: LanguageType;
+	creator_data?: UserDataTableType;
+	approver_data?: UserDataTableType;
+};
+
+export type ActionPerformedBy = {
+	id?: string;
+	email?: string;
 };
 
 export type ListData = {

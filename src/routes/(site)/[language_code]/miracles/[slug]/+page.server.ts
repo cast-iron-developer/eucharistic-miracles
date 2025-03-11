@@ -1,10 +1,15 @@
-import type { PageServerLoad } from '../../../../../../.svelte-kit/types/src/routes';
 import { genericApiCall } from '$lib/utils/api-utils';
 import { supabase } from '$lib/server/supabaseClient';
-import { carouselItems } from '$lib/utils/testData/carousel-items';
+import { carouselItems } from '$lib/utils/test-data/carousel-items';
 import type { CarouselItem } from '$lib/utils/types/general-types';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: ({ params }: { params: any }) => Promise<
+	| {
+			miracleData: any[];
+			carouselData: any[];
+	  }
+	| { miracleData: unknown[]; carouselData: CarouselItem[] }
+> = async ({ params }) => {
 	const [miracleData, miracleError] = await genericApiCall(
 		supabase
 			.from('miracles')
