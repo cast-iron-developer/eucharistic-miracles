@@ -11,10 +11,10 @@
 <div class={styles.navbar}>
 	<ul class={styles.desktopListStyles}>
 		<li class={styles.desktopItemStyles}>
-			<a class="btn btn-sm btn-success" href={`${homePath}/create`}>Create New Record</a>
+			<a class="btn btn-sm btn-success text-white" href={`${homePath}/create`}>Create New Record</a>
 		</li>
 		<li class={styles.desktopItemStyles}>
-			<button class="btn btn-error btn-sm" onclick={logout}>Log out</button>
+			<button class="btn btn-error btn-sm text-white" onclick={logout}>Log out</button>
 		</li>
 	</ul>
 </div>

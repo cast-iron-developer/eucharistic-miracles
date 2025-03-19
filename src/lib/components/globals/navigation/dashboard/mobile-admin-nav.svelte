@@ -24,10 +24,10 @@
 	</div>
 	<ul class={styles.mobileListStyles}>
 		<li class={styles.mobileItemStyles}>
-			<a class="btn btn-sm btn-success" href={`${homePath}/create`}>Create New Record</a>
+			<a class="btn btn-sm btn-success text-white" href={`${homePath}/create`}>Create New Record</a>
 		</li>
 		<li class={styles.mobileItemStyles}>
-			<button class="btn btn-error btn-sm" onclick={logout}>Log out</button>
+			<button class="btn btn-error btn-sm text-white" onclick={logout}>Log out</button>
 		</li>
 	</ul>
 </div>

@@ -21,11 +21,22 @@ export type MiracleFormType = {
 		story: string;
 		occurrence_year: number;
 		quotes: string[];
+		published: boolean;
 		type: string;
 	};
 	errors?: {
-		name?: string[];
-		story?: string[];
-		country_id?: string[];
+		base_translation: string[];
+		blurb: string[];
+		country_id: string[];
+		deleted: string[];
+		draft: string[];
+		language_code: string[];
+		name: string[];
+		occurrence_year: string[];
+		quotes: string[];
+		story: string[];
+		published: string[];
+		type: string[];
+		message: string;
 	};
 };

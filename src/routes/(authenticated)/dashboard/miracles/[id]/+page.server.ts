@@ -112,8 +112,16 @@ export const actions: Actions = {
 				.eq('id', params.id)
 				.select();
 
-			console.log('Data: ', data);
-			console.log('Error: ', error);
+			if (data.length === 0) {
+				if (useDebug()) {
+					console.log(
+						`User: ${(userData as unknown as UserDataTableType).supabase_id} is unable to update record: ${result.name}`
+					);
+				}
+
+				throw new Error('Unable to process record on behalf of user');
+			}
+
 			if (error) {
 				if (useDebug()) {
 					console.log(`Unable to update record: ${result.name}`);
@@ -124,8 +132,8 @@ export const actions: Actions = {
 			}
 		} catch (e: any) {
 			if (e instanceof ZodError) {
+				console.log('error: ', e);
 				const { fieldErrors: errors } = e.flatten();
-
 				return {
 					data: formData,
 					errors

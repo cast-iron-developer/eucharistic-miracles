@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import moment from 'moment';
+import { superRefineFeeder } from '$lib/utils/helpers/helper.utils';
 
 export const editMiracleSchema = z
 	.object({
@@ -32,28 +33,20 @@ export const editMiracleSchema = z
 	})
 	.superRefine(({ deleted, published, draft }, ctx) => {
 		if (deleted && draft && published) {
-			ctx.addIssue({
-				code: 'custom',
-				message: 'A Record cannot be Published, Deleted, and in a Draft state.',
-				path: ['draft', 'deleted', 'published']
-			});
+			let fields = ['deleted', 'draft', 'published'];
+			superRefineFeeder(
+				fields,
+				'A Record cannot be Published, Deleted, and in a Draft state.',
+				ctx
+			);
 		} else if (deleted && published) {
-			ctx.addIssue({
-				code: 'custom',
-				message: 'A Record cannot be Published and Deleted.',
-				path: ['deleted', 'published']
-			});
+			let fields = ['deleted', 'published'];
+			superRefineFeeder(fields, 'A Record cannot be Published and Deleted.', ctx);
 		} else if (published && draft) {
-			ctx.addIssue({
-				code: 'custom',
-				message: 'A Record cannot be in both a Draft and a Published state.',
-				path: ['published', 'draft']
-			});
+			let fields = ['published', 'draft'];
+			superRefineFeeder(fields, 'A Record cannot be in both a Draft and a Published state.', ctx);
 		} else if (draft && deleted) {
-			ctx.addIssue({
-				code: 'custom',
-				message: 'A Record cannot be in both a Draft and a Deleted state.',
-				path: ['deleted', 'draft']
-			});
+			let fields = ['deleted', 'draft'];
+			superRefineFeeder(fields, 'A Record cannot be in both a Draft and a Deleted state.', ctx);
 		}
 	});

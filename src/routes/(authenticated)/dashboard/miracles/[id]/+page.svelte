@@ -1,19 +1,39 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { PageProps } from './$types';
+	import type { PageData } from './$types';
 	import Icon from '@iconify/svelte';
 	import moment from 'moment';
 	import { hasPermission } from '$lib/utils/role-permissions';
+	import type { MiracleFormType } from '$lib/utils/types/auth-types';
+	import Quill from 'quill';
 
-	let { data, form }: PageProps = $props();
+	let { data, form }: { data: PageData, form: MiracleFormType } = $props();
+
+	let storyEditor = new Quill('#story', {
+		modules: {
+			toolbar: [
+				['bold', 'italic'],
+				['link', 'blockquote', 'code-block', 'image'],
+				[{ list: 'ordered' }, { list: 'bullet' }]
+			]
+		}
+	});
+	let blurbEditor = new Quill('#blurb', {
+		modules: {
+			toolbar: [
+				['bold', 'italic'],
+				['link', 'blockquote', 'code-block', 'image'],
+				[{ list: 'ordered' }, { list: 'bullet' }]
+			]
+		}
+	});
 
 	$inspect(form);
+
+	let processing = $state(false);
 	// setting up state management for form
-	let currentCountry = $state(form?.data.country_id ?? data?.miracleData.country_id);
-	let currentLanguage = $state(form?.data.language_code ?? data?.miracleData.language_code);
-	let currentQuotes: string[] = $state(form?.data.quotes ?? data?.miracleData.quotes);
+	let currentQuotes: string[] | null = $state(form?.data?.quotes ?? data?.miracleData.quotes);
 	let recordData = $state(form?.data ?? data?.miracleData);
-	console.log(form?.data);
 
 	let newQuote = $state('');
 
@@ -34,9 +54,12 @@
 	});
 	const handleAddNewQuote = (e: any) => {
 		e.preventDefault();
-
 		if (newQuote === '') {
 			return;
+		}
+
+		if (currentQuotes === null) {
+			currentQuotes = [];
 		}
 
 		newQuote = newQuote.replace(',', '');
@@ -48,13 +71,14 @@
 
 	const removeQuote = (e: any, index: number) => {
 		e.preventDefault();
+		if (currentQuotes === null) return;
 		currentQuotes = currentQuotes.filter((_, i) => i !== index);
 	};
 
 </script>
 
 <section class="bg-white grid grid-cols-[7fr,3fr] gap-4 h-full">
-	<section class="col-span-1 overflow-auto p-12">
+	<section class="col-span-1 overflow-auto p-12 border-r-2 border-black ">
 		<div class="container pt-4">
 			<h1 class="text-3xl">Edit Page: <strong>{data.miracleData.name}</strong></h1>
 			<p>Here you can edit an existing record as necessary.</p>
@@ -65,18 +89,50 @@
 				class="mx-auto"
 				method="POST"
 				action="?/update"
-				use:enhance>
-				<div class="flex flex-row flex-wrap">
+				use:enhance={() => {
+					processing = true;
+					return async ({ update, result }) => {
+						await update();
+
+						if ('data' in result && result.data) {
+							const form: MiracleFormType = result.data;
+							if (form.errors && form.data) {
+								// manually reassign values
+								recordData = form.data;
+								currentQuotes = form.data.quotes
+							}
+						}
+
+						processing = false;
+					}
+				}}>
+				{#if form?.errors?.message}
+					<p class="label-text-alt text-error text-lg">{form?.errors?.message}</p>
+				{/if}
+				<div class="flex flex-col gap-4 justify-between">
 					<fieldset data-id="name" class="fieldset">
 						<legend class="fieldset-legend text-lg">What is the name of the Miracle?</legend>
-						<input type="text" class="input" name="name" placeholder="Miracle Name"
+						<input type="text" class="input {form?.errors?.name ? 'input-error' : ''}" name="name"
+									 placeholder="Miracle Name"
 									 bind:value={recordData.name} />
+						{#if form?.errors?.name}
+							<label for="name" class="label">
+								<span class="label-text-alt text-error">{form?.errors?.name}</span>
+							</label>
+						{/if}
 					</fieldset>
 
 					<fieldset data-id="blurb" class="fieldset">
 						<legend class="fieldset-legend text-lg">Blurbs for the Miracle</legend>
-						<input type="text" class="input" name="blurb" placeholder="Miracle Blurb"
-									 bind:value={recordData.blurb} />
+						<textarea
+							class="textarea textarea-bordered textarea-lg h-96 w-full to-sm:max-w-xs {form?.errors?.blurb ? 'textarea-error' : ''}"
+							placeholder="Miracle Blurb"
+							name="story">{recordData.blurb}></textarea>
+						{#if form?.errors?.blurb}
+							<label for="blurb" class="label">
+								<span class="label-text-alt text-error">{form?.errors?.blurb}</span>
+							</label>
+						{/if}
 					</fieldset>
 				</div>
 
@@ -101,7 +157,11 @@
 									</li>
 								{/each}
 							</ul>
-
+							{#if form?.errors?.quotes}
+								<label for="quotes" class="label">
+									<span class="label-text-alt text-error">{form?.errors?.quotes}</span>
+								</label>
+							{/if}
 						{/if}
 						<input
 							class="input w-96 mb-2 mr-2"
@@ -122,11 +182,15 @@
 					</div>
 					<div class="flex to-md:flex-col from-md:flex-row">
 						<textarea
-							class="textarea textarea-bordered textarea-lg h-20 w-full to-sm:max-w-xs"
+							class="textarea textarea-bordered textarea-lg h-96 w-full to-sm:max-w-xs {form?.errors?.story ? 'textarea-error' : ''}"
 							placeholder="Story of the Miracle"
-							name="story">{form?.data.story ?? data?.miracleData.story}></textarea>
-
+							name="story">{recordData.story}></textarea>
 					</div>
+					{#if form?.errors?.story}
+						<label for="story" class="label">
+							<span class="label-text-alt text-error">{form?.errors?.story}</span>
+						</label>
+					{/if}
 				</div>
 
 				<div class="divider"></div>
@@ -134,35 +198,56 @@
 				<div class="flex flex-row to-md:flex-col from-md:flex-row items-baseline">
 					<fieldset data-id="occurrence_year" class="fieldset">
 						<legend class="fieldset-legend text-lg">When did the Miracle occur?</legend>
-						<input type="text" class="input" name="occurrence_year" placeholder="Year of the Miracle"
+						<input type="text" class="input {form?.errors?.occurrence_year ? 'input-error' : ''}" name="occurrence_year"
+									 placeholder="Year of the Miracle"
 									 bind:value={recordData.occurrence_year} />
+						{#if form?.errors?.occurrence_year}
+							<label for="occurrence_year" class="label">
+								<span class="label-text-alt text-error">{form?.errors?.occurrence_year}</span>
+							</label>
+						{/if}
 					</fieldset>
 				</div>
 
 				<div class="divider"></div>
 
-				<div class="flex flex-row flex-wrap justify-start gap-4 items-baseline">
+				<div class="flex flex-row flex-wrap justify-between gap-4 items-baseline">
 					<fieldset class="fieldset w-fit">
 						<legend class="fieldset-legend text-lg">Record Type:</legend>
-						<input class="input content-center" disabled value={data?.miracleData.type} />
+						<p class="input content-center {form?.errors?.type ? 'input-error' : ''}">
+							{data?.miracleData.type}
+						</p>
 					</fieldset>
 
 					<fieldset data-id="language_code" class="fieldset w-fit">
 						<legend class="fieldset-legend text-lg">What is the translation?</legend>
-						<select class="select select-bordered w-full max-w-xs" bind:value={currentLanguage} name="language_code">
+						<select class="select select-bordered w-full max-w-xs {form?.errors?.language_code ? 'input-error' : ''}"
+										bind:value={recordData.language_code}
+										name="language_code">
 							{#each data.languageData as language}
 								<option value={language.code}>{language.name}</option>
 							{/each}
 						</select>
+						{#if form?.errors?.language_code}
+							<label for="language_code" class="label">
+								<span class="label-text-alt text-error">{form?.errors?.language_code}</span>
+							</label>
+						{/if}
 					</fieldset>
 
 					<fieldset id="country" class="fieldset w-fit">
 						<legend class="fieldset-legend text-lg">Miracle location?</legend>
-						<select class="select select-bordered w-full max-w-xs" bind:value={currentCountry} name="country_id">
+						<select class="select select-bordered w-full max-w-xs {form?.errors?.country_id ? 'input-error' : ''}"
+										bind:value={recordData.country_id} name="country_id">
 							{#each data.countryData as country}
 								<option value={country.id}>{country.name}</option>
 							{/each}
 						</select>
+						{#if form?.errors?.country_id}
+							<label for="country_id" class="label">
+								<span class="label-text-alt text-error">{form?.errors?.country_id}</span>
+							</label>
+						{/if}
 					</fieldset>
 				</div>
 
@@ -175,14 +260,17 @@
 							<input
 								type="checkbox"
 								bind:checked={recordData.base_translation}
-								class="checkbox"
+								class="checkbox {form?.errors?.base_translation ? 'input-error' : ''}"
 								name="base_translation"
 								value={recordData.base_translation} />
 							<span class="text-lg">Base Translation?</span>
 						</label>
+						{#if form?.errors?.base_translation}
+							<label for="base_translation" class="label">
+								<span class="label-text-alt text-error">{form?.errors?.base_translation}</span>
+							</label>
+						{/if}
 					</fieldset>
-					<p>current status: {recordData.base_translation}</p>
-
 
 					<fieldset data-id="draft"
 										class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-fit">
@@ -192,12 +280,15 @@
 								value={recordData.draft}
 								bind:checked={recordData.draft}
 								name="draft"
-								class="checkbox" />
+								class="checkbox {form?.errors?.draft ? 'input-error' : ''}" />
 							<span class="text-lg">Is this a Draft?</span>
 						</label>
+						{#if form?.errors?.draft}
+							<label for="draft" class="label">
+								<span class="label-text-alt text-error">{form?.errors?.draft}</span>
+							</label>
+						{/if}
 					</fieldset>
-					<p>current status: {recordData.draft}</p>
-
 
 					{#if hasPermission(data.userData, 'miracles', 'delete', data?.miracleData)}
 						<fieldset data-id="deleted"
@@ -208,11 +299,15 @@
 									value={recordData.deleted}
 									bind:checked={recordData.deleted}
 									name="deleted"
-									class="checkbox" />
+									class="checkbox {form?.errors?.deleted ? 'input-error' : ''}" />
 								<span class="text-lg">Delete this Miracle?</span>
 							</label>
+							{#if form?.errors?.deleted}
+								<label for="deleted" class="label">
+									<span class="label-text-alt text-error">{form?.errors?.deleted}</span>
+								</label>
+							{/if}
 						</fieldset>
-						<p>current status: {recordData.deleted}</p>
 					{/if}
 
 					{#if hasPermission(data.userData, 'miracles', 'approve', data?.miracleData)}
@@ -223,20 +318,27 @@
 									type="checkbox"
 									value={recordData.published}
 									bind:checked={recordData.published}
-									class="checkbox"
+									class="checkbox {form?.errors?.published ? 'input-error' : ''}"
 									name="published"
 								/>
 								<span class="text-lg">Publish this Miracle?</span>
 							</label>
+							{#if form?.errors?.published}
+								<label for="published" class="label">
+									<span class="label-text-alt text-error">{form?.errors?.published}</span>
+								</label>
+							{/if}
 						</fieldset>
-						<p>current status: {recordData.published}</p>
-
 					{/if}
 				</div>
 
 				<div class="divider"></div>
 				{#if hasPermission(data.userData, 'miracles', 'update', data?.miracleData)}
-					<button class="btn btn-success text-white">Update {data?.miracleData.type}</button>
+					<button class="btn btn-success text-white">
+						{#if processing}
+							<span class="loading loading-spinner loading-md"></span>
+						{/if}
+						Update {data?.miracleData.type}</button>
 				{/if}
 			</form>
 		</div>

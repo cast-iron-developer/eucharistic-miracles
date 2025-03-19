@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export const toUpperCase = (str: string) => {
 	return str.toUpperCase();
 };
@@ -29,4 +31,14 @@ export const convertBooleanValue = (fieldType: string, value: boolean): string =
 			str = 'Information not available';
 	}
 	return str;
+};
+
+export const superRefineFeeder = (fields: string[], msg: string, ctx: z.RefinementCtx) => {
+	return fields.map((field: string) => {
+		ctx.addIssue({
+			code: 'custom',
+			message: msg,
+			path: [field]
+		});
+	});
 };
