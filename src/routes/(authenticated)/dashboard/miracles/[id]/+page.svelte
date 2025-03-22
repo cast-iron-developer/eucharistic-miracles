@@ -5,28 +5,8 @@
 	import moment from 'moment';
 	import { hasPermission } from '$lib/utils/role-permissions';
 	import type { MiracleFormType } from '$lib/utils/types/auth-types';
-	import Quill from 'quill';
 
 	let { data, form }: { data: PageData, form: MiracleFormType } = $props();
-
-	let storyEditor = new Quill('#story', {
-		modules: {
-			toolbar: [
-				['bold', 'italic'],
-				['link', 'blockquote', 'code-block', 'image'],
-				[{ list: 'ordered' }, { list: 'bullet' }]
-			]
-		}
-	});
-	let blurbEditor = new Quill('#blurb', {
-		modules: {
-			toolbar: [
-				['bold', 'italic'],
-				['link', 'blockquote', 'code-block', 'image'],
-				[{ list: 'ordered' }, { list: 'bullet' }]
-			]
-		}
-	});
 
 	$inspect(form);
 
@@ -125,6 +105,7 @@
 					<fieldset data-id="blurb" class="fieldset">
 						<legend class="fieldset-legend text-lg">Blurbs for the Miracle</legend>
 						<textarea
+							id="blurb"
 							class="textarea textarea-bordered textarea-lg h-96 w-full to-sm:max-w-xs {form?.errors?.blurb ? 'textarea-error' : ''}"
 							placeholder="Miracle Blurb"
 							name="story">{recordData.blurb}></textarea>
@@ -182,6 +163,7 @@
 					</div>
 					<div class="flex to-md:flex-col from-md:flex-row">
 						<textarea
+							id="story"
 							class="textarea textarea-bordered textarea-lg h-96 w-full to-sm:max-w-xs {form?.errors?.story ? 'textarea-error' : ''}"
 							placeholder="Story of the Miracle"
 							name="story">{recordData.story}></textarea>
